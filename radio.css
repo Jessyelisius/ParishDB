@@ -1,0 +1,53 @@
+.radiobutton{
+    position: relative;
+    margin-right: 5px;
+    padding-left: 53px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.radiobutton input{
+opacity: 0;
+width: 0;
+height: 0;
+position: absolute;
+}
+
+.radiobutton .indicator{
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: #eee;
+    border: solid 2px #222;
+}
+
+.radiobutton:hover .indicator{
+    background-color: #ccc;
+}
+
+.indicator::after{
+    content: "";
+    position: absolute;
+    width: 5px;
+    height: 10px;
+    left:9.5px;
+    top: 4px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
+
+.radiobutton input ~ .indicator::after{
+    display: none;
+}
+
+.radiobutton input:checked ~ .indicator::after{
+display: block;
+}
+.radiobutton input:checked ~ .indicator{
+    background-color: blue;
+    border: 0;
+}

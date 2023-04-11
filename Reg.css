@@ -1,0 +1,150 @@
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif ;
+    user-select: none;
+    text-decoration: none;
+}
+body{
+    background-color: #f7f7f7;
+}
+form{
+    background-color: #ece9e9 ;
+    width: 500px;
+    margin: auto;
+    margin-top: 2rem;
+    padding: 2rem;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 0 #c0c0c0;
+}
+.text-muted{
+    color: grey;
+}
+.heading{
+    padding: 1rem 0;
+    border-bottom: solid 1px #c0c0c0;
+    text-align: center;
+    font-size: 25px;
+}
+.photo{
+    display: flex;
+   justify-content: space-between;
+   align-items: flex-start;
+}
+.heading img{
+    margin-top: 5px;
+}
+
+.status{
+    border-bottom: solid 1px #c0c0c0;
+    padding: 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+/* personal credential ends */
+.personal-credential{
+    padding: 1rem 0;
+}
+
+.personal-credential .box{
+margin: 0.5rem 0;
+display: flex;
+align-items: center;
+border-radius: 4px;
+overflow: hidden;
+}
+
+.personal-credential .box .container{
+    background-color: blue;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.personal-credential .box input{
+    flex: 1;
+    padding: 10px;
+    border: 0;
+    outline: 0;
+}
+
+.personal-credential .box span{
+    color: white;
+    padding: 0 10px;
+    font-size: 18px;
+}
+
+/* gender start */
+
+.gender{
+padding: 1rem 0;
+display: flex;
+flex-wrap: wrap;
+align-items: center;
+gap: 10px;
+font-family: Arial, Helvetica, sans-serif;
+}
+.gender .radiobutton{
+    font-weight: normal;
+}
+
+
+.personal-credential .box input{
+    height: 45px;
+    width: 100%;
+    outline: none;
+    border-radius: 4px;
+    border: 1px solid white;
+    padding-left: 15px;
+    font-size: 16px;
+    border-bottom-width: 2px; 
+    transition: all 0.3s ease;
+}
+/* 
+.personal-credential .box .icon.container input:focus,
+.personal-credential .box .icon.container input:valid{
+    border-color: blue;
+} */
+
+/* Submit button */
+
+.terms-action{
+    /* padding: 1rem 0; */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif !important;
+}
+.terms-action p{
+    font-weight: normal;
+}
+
+.terms-action .Register-btn{
+    background-color: blue;
+    font-size: 20px;
+    color: white;
+    outline: 0;
+    border: 0;
+    padding: 8px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* responsive design */
+
+@media only screen and (max-width: 400px){
+    form{
+        width: 100%;
+    }
+    .gender{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
