@@ -7,18 +7,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Helvetica">
-    <link rel="stylesheet" href="Reg.css">
-    <link rel="stylesheet" href="radio.css">
+    <link rel="stylesheet" href="./public/style/radio.css">
+    <link rel="stylesheet" href="./public/style/Reg.css">
     <title>SJMCC Registration Form</title>
 </head>
 
 <body>
-    <form action="function.php" method="POST">
+    <form action="includes/form.inc.php" method="post">
         <h2 class="heading text-muted">ST JOSEPH MUKASA PARISH GIDAN-MANGORO
         <div class="photo">
-                <img src="background.png" width="80px" height="80px">
+                <img src="./public/img/background.png" width="80px" height="80px">
                 <small> Registration Form</small>
-                <img src="bg1.jpg" width="50px" height="50px">
+                <img src="./public/img/bg1.jpg" width="50px" height="50px">
             </div>
           
              
@@ -36,7 +36,7 @@
                 <span class="indicator"></span>
             </label>
             <label class="radiobutton">Parishioner
-                <input type="radio" value="Parishioner" name="status_new">
+                <input type="radio" value="Parishioner" name="status-new">
                 <span class="indicator"></span>
             </label>
         </div>
