@@ -62,5 +62,7 @@ if (isset($_POST["submit"])) {
     //running error handler and user signup
     $user->formSubmit();
     //GOing back to front page
-    header('location: ./home.php?error=none');
+    header('location: ../home.php?error=none');
 }
+
+?>

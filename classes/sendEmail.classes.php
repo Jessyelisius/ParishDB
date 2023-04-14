@@ -97,13 +97,13 @@ class FormContrl extends InsertData{
     public function formSubmit(){
        if ($this->emptyInput() == false) {
             //echo "Invalid input";
-            header('location: ../index.php?error=emptyinput');
+            header('location: ../home.php?error=emptyinput');
             exit();
        }
        
         if ($this->invalidEmail() == false) {
             //echo "invalid Email";
-            header('location: ../index.php?error=emailnotvalid');
+            header('location: ../home.php?error=emailnotvalid');
             exit();
         }
 
