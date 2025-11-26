@@ -10,6 +10,11 @@ const morgan = require('morgan');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// At the top of your app.js, after the imports
+console.log('✅ Server starting...');
+console.log('📧 Email service:', process.env.service);
+console.log('📬 Sending from:', process.env.email);
+
 // Middleware
 app.use(cors());
 app.use(bodyParser.json({extended: true}));
@@ -122,6 +127,7 @@ const transporter = mailer.createTransport({
   host: process.env.host,
 
   port: 465,
+  secure: true,
 
   auth: {
     user: process.env.email,
@@ -374,6 +380,27 @@ app.get('/api/birthdays/current-month', async (req, res) => {
   }
 });
 
+
+// Test birthday email route
+app.get('/api/test-birthday', async (req, res) => {
+  try {
+    console.log('🎂 Manual birthday email test triggered...');
+    await sendBirthdayEmails();
+    res.json({ 
+      success: true, 
+      message: 'Birthday email test completed! Check console for results.' 
+    });
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: error.message 
+    });
+  }
+});
+
+// http://localhost:5000/api/test-birthday
+
+
 // Send birthday emails
 async function sendBirthdayEmails() {
   try {
@@ -387,87 +414,178 @@ async function sendBirthdayEmails() {
       }
     });
 
-    // for (const member of members) {
-    //   const mailOptions = {
-    //     from: 'sjmccgidanmangoro@gmail.com',
-    //     to: member.email,
-    //     subject: '🎉 Happy Birthday from St. Joseph Mukasa Parish! 🎂',
-    //     html: `
-    //       <!DOCTYPE html>
-    //       <html>
-    //       <head>
-    //         <style>
-    //           body { font-family: 'Open Sans', Arial, sans-serif; background: #fdfdfd; margin: 0; padding: 20px; }
-    //           .card { background: #eceaea; border-radius: 15px; max-width: 600px; margin: 0 auto; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    //           .logo { width: 80px; height: 80px; margin: 0 auto 20px; }
-    //           h1 { color: #1a5f3f; font-size: 2.5em; margin: 20px 0; }
-    //           p { font-size: 18px; line-height: 1.8; color: #333; margin: 15px 0; }
-    //           .blessing { background: linear-gradient(135deg, #1a5f3f 0%, #2d8f5f 100%); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
-    //           .footer { margin-top: 30px; color: #666; font-size: 16px; }
-    //         </style>
-    //       </head>
-    //       <body>
-    //         <div class="card">
-    //           <img src="cid:parishlogo" class="logo" alt="St. Joseph Mukasa Parish">
-    //           <h1>🎉 Happy Birthday, ${member.fullName.split(' ')[0]}! 🎂</h1>
-    //           <p>Wishing you a wonderful day filled with laughter!</p>
-    //           <div class="blessing">
-    //             <p><strong>As you celebrate your new age in the Lord, may heaven rejoice over you.</strong></p>
-    //             <p>For you are surrounded with joy and mercy.</p>
-    //           </div>
-    //           <p>Here comes another reason to be joyous!</p>
-    //           <p><strong>Have a Great One!</strong></p>
-    //           <div class="footer">
-    //             <p>With love and prayers,</p>
-    //             <p><strong>St. Joseph Mukasa Parish</strong><br>Gidan Mangoro</p>
-    //           </div>
-    //         </div>
-    //       </body>
-    //       </html>
-    //     `
-    //   };
-      
-    //   await transporter.sendMail(mailOptions);
-    //   console.log(`Birthday email sent to ${member.fullName}`);
-    // }
+
+    ///link to email images 
+    // https://ibb.co/0RhJKqZv
+    // https://ibb.co/SXt3ys2w
+    // https://ibb.co/pBBnvQBN
   
     for (const member of members) {
       const firstName = member.fullName.split(' ')[0];
       
-      const birthdayHTML = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-          <style>
-            body { font-family: 'Open Sans', Arial, sans-serif; background: #fdfdfd; margin: 0; padding: 20px; }
-            .card { background: #eceaea; border-radius: 15px; max-width: 600px; margin: 0 auto; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-            .logo { width: 80px; height: 80px; margin: 0 auto 20px; }
-            h1 { color: #1a5f3f; font-size: 2.5em; margin: 20px 0; }
-            p { font-size: 18px; line-height: 1.8; color: #333; margin: 15px 0; }
-            .blessing { background: linear-gradient(135deg, #1a5f3f 0%, #2d8f5f 100%); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
-            .footer { margin-top: 30px; color: #666; font-size: 16px; }
-          </style>
-        </head>
-        <body>
-          <div class="card">
-            <h1>🎉 Happy Birthday, ${firstName}! 🎂</h1>
-            <p>Wishing you a wonderful day filled with laughter!</p>
-            <div class="blessing">
-              <p><strong>As you celebrate your new age in the Lord, may heaven rejoice over you.</strong></p>
-              <p>For you are surrounded with joy and mercy.</p>
-            </div>
-            <p>Here comes another reason to be joyous!</p>
-            <p><strong>Have a Great One!</strong></p>
-            <div class="footer">
-              <p>With love and prayers,</p>
-              <p><strong>St. Joseph Mukasa Parish</strong><br>Gidan Mangoro</p>
-            </div>
-          </div>
-        </body>
-        </html>
-      `;
+      // const birthdayHTML = `
+      //   <!DOCTYPE html>
+      //   <html>
+      //   <head>
+      //     <style>
+      //       body { font-family: 'Open Sans', Arial, sans-serif; background: #fdfdfd; margin: 0; padding: 20px; }
+      //       .card { background: #eceaea; border-radius: 15px; max-width: 600px; margin: 0 auto; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+      //       .logo { width: 80px; height: 80px; margin: 0 auto 20px; }
+      //       h1 { color: #1a5f3f; font-size: 2.5em; margin: 20px 0; }
+      //       p { font-size: 18px; line-height: 1.8; color: #333; margin: 15px 0; }
+      //       .blessing { background: linear-gradient(135deg, #1a5f3f 0%, #2d8f5f 100%); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
+      //       .footer { margin-top: 30px; color: #666; font-size: 16px; }
+      //     </style>
+      //   </head>
+      //   <body>
+      //     <div class="card">
+      //       <h1>🎉 Happy Birthday, ${firstName}! 🎂</h1>
+      //       <p>Wishing you a wonderful day filled with laughter!</p>
+      //       <div class="blessing">
+      //         <p><strong>As you celebrate your new age in the Lord, may heaven rejoice over you.</strong></p>
+      //         <p>For you are surrounded with joy and mercy.</p>
+      //       </div>
+      //       <p>Here comes another reason to be joyous!</p>
+      //       <p><strong>Have a Great One!</strong></p>
+      //       <div class="footer">
+      //         <p>With love and prayers,</p>
+      //         <p><strong>St. Joseph Mukasa Parish</strong><br>Gidan Mangoro</p>
+      //       </div>
+      //     </div>
+      //   </body>
+      //   </html>
+      // `;
       
       // Use your Sendmail function
+      const birthdayHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { 
+            font-family: 'Open Sans', Arial, sans-serif; 
+            background: #f0f0f0; 
+            margin: 0; 
+            padding: 20px; 
+          }
+          .email-wrapper {
+            max-width: 650px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+          }
+          .header-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, rgba(26, 95, 63, 0.9), rgba(45, 143, 95, 0.9)),
+                        url('https://ibb.co/SXt3ys2w') center/cover;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 30px;
+          }
+          .jesuits-logo {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+          }
+          .header-image h1 {
+            font-size: 3em;
+            margin: 10px 0;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+          }
+          .content {
+            padding: 40px 30px;
+            text-align: center;
+          }
+          .content p {
+            font-size: 18px;
+            line-height: 1.8;
+            color: #333;
+            margin: 15px 0;
+          }
+          .blessing-box {
+            background: linear-gradient(135deg, #1a5f3f 0%, #2d8f5f 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(26, 95, 63, 0.3);
+          }
+          .blessing-box p {
+            color: white;
+            font-size: 19px;
+            line-height: 1.7;
+          }
+          .balloons {
+            font-size: 50px;
+            margin: 20px 0;
+            letter-spacing: 10px;
+          }
+          .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 3px solid #1a5f3f;
+          }
+          .footer p {
+            color: #666;
+            font-size: 16px;
+            margin: 8px 0;
+          }
+          .parish-name {
+            color: #1a5f3f;
+            font-weight: bold;
+            font-size: 20px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="email-wrapper">
+          <div class="header-image">
+            <img src="https://ibb.co/pBBnvQBN" alt="Jesuits" class="jesuits-logo">
+            <h1>🎉 Happy Birthday! 🎂</h1>
+          </div>
+          
+          <div class="content">
+            <div class="balloons">🎈🎊🎁🎉</div>
+            <h2 style="color: #1a5f3f; font-size: 2.2em; margin: 20px 0;">Dear ${firstName},</h2>
+            <p>Wishing you a wonderful day filled with laughter and joy!</p>
+            
+            <div class="blessing-box">
+              <p><strong>✨ As you celebrate your new age in the Lord, may heaven rejoice over you.</strong></p>
+              <p>For you are surrounded with joy and mercy.</p>
+              <p>🙏 May this new year of your life be filled with God's abundant blessings!</p>
+            </div>
+            
+            <p style="font-size: 20px;"><strong>Here comes another reason to be joyous!</strong></p>
+            <p style="font-size: 22px; color: #1a5f3f;"><strong>Have a Great One! 🎊</strong></p>
+            <div class="balloons">🎂🍰🧁🎈</div>
+          </div>
+          
+          <div class="footer">
+            <p>With love and prayers,</p>
+            <p class="parish-name">St. Joseph Mukasa Catholic Parish</p>
+            <p>Gidan Mangoro</p>
+            <p style="margin-top: 20px; font-size: 14px; color: #999;">
+              "May the Lord bless you and keep you" - Numbers 6:24
+            </p>
+          </div>
+        </div>
+      </body>
+      </html>
+      `;
+      
       const result = await Sendmail(
         member.email, 
         ' Happy Birthday from St. Joseph Mukasa Parish! 🎂',
@@ -494,35 +612,132 @@ async function sendBirthdayEmails() {
           
           const spouseFirstName = member.spouse.fullName.split(' ')[0];
           const spouseBirthdayHTML = `
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <style>
-                body { font-family: 'Open Sans', Arial, sans-serif; background: #fdfdfd; margin: 0; padding: 20px; }
-                .card { background: #eceaea; border-radius: 15px; max-width: 600px; margin: 0 auto; padding: 40px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-                h1 { color: #1a5f3f; font-size: 2.5em; margin: 20px 0; }
-                p { font-size: 18px; line-height: 1.8; color: #333; margin: 15px 0; }
-                .blessing { background: linear-gradient(135deg, #1a5f3f 0%, #2d8f5f 100%); color: white; padding: 20px; border-radius: 10px; margin: 20px 0; }
-                .footer { margin-top: 30px; color: #666; font-size: 16px; }
-              </style>
-            </head>
-            <body>
-              <div class="card">
-                <h1>🎉 Happy Birthday, ${spouseFirstName}! 🎂</h1>
-                <p>Wishing you a wonderful day filled with laughter!</p>
-                <div class="blessing">
-                  <p><strong>As you celebrate your new age in the Lord, may heaven rejoice over you.</strong></p>
-                  <p>For you are surrounded with joy and mercy.</p>
-                </div>
-                <p>Here comes another reason to be joyous!</p>
-                <p><strong>Have a Great One!</strong></p>
-                <div class="footer">
-                  <p>With love and prayers,</p>
-                  <p><strong>St. Joseph Mukasa Parish</strong><br>Gidan Mangoro</p>
-                </div>
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <style>
+              body { 
+                font-family: 'Open Sans', Arial, sans-serif; 
+                background: #f0f0f0; 
+                margin: 0; 
+                padding: 20px; 
+              }
+              .email-wrapper {
+                max-width: 650px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+              }
+              .header-image {
+                width: 100%;
+                height: 250px;
+                background: linear-gradient(135deg, rgba(26, 95, 63, 0.9), rgba(45, 143, 95, 0.9)),
+                            url('https://ibb.co/pBBnvQBN') center/cover;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                text-align: center;
+                padding: 30px;
+              }
+              .jesuits-logo {
+                width: 100px;
+                height: 100px;
+                margin-bottom: 15px;
+                background: white;
+                border-radius: 50%;
+                padding: 10px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+              }
+              .header-image h1 {
+                font-size: 3em;
+                margin: 10px 0;
+                text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+              }
+              .content {
+                padding: 40px 30px;
+                text-align: center;
+              }
+              .content p {
+                font-size: 18px;
+                line-height: 1.8;
+                color: #333;
+                margin: 15px 0;
+              }
+              .blessing-box {
+                background: linear-gradient(135deg, #1a5f3f 0%, #2d8f5f 100%);
+                color: white;
+                padding: 30px;
+                border-radius: 15px;
+                margin: 30px 0;
+                box-shadow: 0 10px 30px rgba(26, 95, 63, 0.3);
+              }
+              .blessing-box p {
+                color: white;
+                font-size: 19px;
+                line-height: 1.7;
+              }
+              .balloons {
+                font-size: 50px;
+                margin: 20px 0;
+                letter-spacing: 10px;
+              }
+              .footer {
+                background: #f8f9fa;
+                padding: 30px;
+                text-align: center;
+                border-top: 3px solid #1a5f3f;
+              }
+              .footer p {
+                color: #666;
+                font-size: 16px;
+                margin: 8px 0;
+              }
+              .parish-name {
+                color: #1a5f3f;
+                font-weight: bold;
+                font-size: 20px;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="email-wrapper">
+              <div class="header-image">
+                <img src="https://ibb.co/pBBnvQBN" alt="Jesuits" class="jesuits-logo">
+                <h1>🎉 Happy Birthday! 🎂</h1>
               </div>
-            </body>
-            </html>
+              
+              <div class="content">
+                <div class="balloons">🎈🎊🎁🎉</div>
+                <h2 style="color: #1a5f3f; font-size: 2.2em; margin: 20px 0;">Dear ${spouseFirstName},</h2>
+                <p>Wishing you a wonderful day filled with laughter and joy!</p>
+                
+                <div class="blessing-box">
+                  <p><strong>✨ As you celebrate your new age in the Lord, may heaven rejoice over you.</strong></p>
+                  <p>For you are surrounded with joy and mercy.</p>
+                  <p>🙏 May this new year of your life be filled with God's abundant blessings!</p>
+                </div>
+                
+                <p style="font-size: 20px;"><strong>Here comes another reason to be joyous!</strong></p>
+                <p style="font-size: 22px; color: #1a5f3f;"><strong>Have a Great One! 🎊</strong></p>
+                <div class="balloons">🎂🍰🧁🎈</div>
+              </div>
+              
+              <div class="footer">
+                <p>With love and prayers,</p>
+                <p class="parish-name">St. Joseph Mukasa Catholic Parish</p>
+                <p>Gidan Mangoro</p>
+                <p style="margin-top: 20px; font-size: 14px; color: #999;">
+                  "May the Lord bless you and keep you" - Numbers 6:24
+                </p>
+              </div>
+            </div>
+          </body>
+          </html>
           `;
           
           const result = await Sendmail(
@@ -545,8 +760,16 @@ async function sendBirthdayEmails() {
 }
 
 // Schedule birthday emails daily at 8:00 AM
-cron.schedule('0 8 * * *', () => {
-  console.log('Running birthday email job...');
+// cron.schedule('0 8 * * *', () => {
+//   console.log('⏰ Cron job triggered at:', new Date().toLocaleString());
+//   console.log('Running birthday email job...');
+//   sendBirthdayEmails();
+// });
+
+// To this (runs every minute):
+cron.schedule('* * * * *', () => {
+  console.log('⏰ Cron job triggered at:', new Date().toLocaleString());
+  console.log('🎂 Running birthday email job...');
   sendBirthdayEmails();
 });
 
